@@ -1,5 +1,5 @@
 {
-  "name": "@mapbox/mapbox-gl-native",
+  "name": "@tophap/mapbox-gl-native",
   "version": "5.0.2",
   "description": "Renders map tiles with Mapbox GL",
   "keywords": [
@@ -9,7 +9,7 @@
   "main": "platform/node/index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mapbox/mapbox-gl-native.git"
+    "url": "git://github.com/tophap/mapbox-gl-native.git"
   },
   "license": "BSD-2-Clause",
   "dependencies": {
