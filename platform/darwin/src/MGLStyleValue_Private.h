@@ -12,11 +12,14 @@
 #include <mbgl/style/conversion/color_ramp_property_value.hpp>
 #include <mbgl/style/conversion/property_value.hpp>
 #include <mbgl/style/conversion/position.hpp>
+#include <mbgl/style/expression/dsl.hpp>
 #import <mbgl/style/transition_options.hpp>
 #import <mbgl/style/types.hpp>
 
 #import <mbgl/util/enum.hpp>
 #include <mbgl/util/interpolate.hpp>
+
+#include <memory>
 
 #if TARGET_OS_IPHONE
     #import "UIColor+MGLAdditions.h"
@@ -44,6 +47,8 @@ NS_INLINE mbgl::style::TransitionOptions MGLOptionsFromTransition(MGLTransition 
     mbgl::style::TransitionOptions options { { MGLDurationFromTimeInterval(transition.duration) }, { MGLDurationFromTimeInterval(transition.delay) } };
     return options;
 }
+
+std::unique_ptr<mbgl::style::expression::Expression> MGLClusterPropertyFromNSExpression(NSExpression *expression);
 
 id MGLJSONObjectFromMBGLExpression(const mbgl::style::expression::Expression &mbglExpression);
 
@@ -212,6 +217,11 @@ private: // Private utilities for converting from mgl to mbgl values
         mbglValue = rawValue.mgl_color;
     }
 
+    // Image
+    void getMBGLValue(NSString *rawValue, mbgl::style::expression::Image &mbglValue) {
+        mbglValue = mbgl::style::expression::Image(rawValue.UTF8String);
+    }
+
     // Array
     void getMBGLValue(ObjCType rawValue, std::vector<MBGLElement> &mbglValue) {
         mbglValue.reserve(rawValue.count);
@@ -288,6 +298,11 @@ private: // Private utilities for converting from mbgl to mgl values
     // Color
     static MGLColor *toMGLRawStyleValue(const mbgl::Color mbglStopValue) {
         return [MGLColor mgl_colorWithColor:mbglStopValue];
+    }
+
+    // Image
+    static NSString *toMGLRawStyleValue(const mbgl::style::expression::Image &mbglImageValue) {
+        return @(mbglImageValue.id().c_str());
     }
 
     // Array
